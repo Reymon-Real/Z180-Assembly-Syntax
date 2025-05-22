@@ -1,7 +1,7 @@
 %YAML 1.2
 
 ---
-name: Z180 Assembly
+name: Z80 Assembly
 file_extensions: [asm, inc]
 scope: source.asm
 
@@ -137,7 +137,7 @@ contexts:
     - match: '(?i)\b(local|section)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(macro|rept[ci]?)\b'
+    - match: '(?i)\b(macro|equ|rept[ci]?)\b'
       scope: keyword.control.asm
 
     - match: '(?i)(align|assert|.assume)'
@@ -181,10 +181,7 @@ contexts:
 
   opcodes:
 
-    - match: '(?i)\b(nop|mlt|rst|ex|ccf|djnz|halt|slp)\b'
-      scope: keyword.control.asm
-
-    - match: '(?i)\b(ei|di)\b'
+    - match: '(?i)\b(nop|rst|im|ccf|djnz|halt)\b'
       scope: keyword.control.asm
 
     - match: '(?i)\b(bit|set|res)\b'
@@ -202,10 +199,19 @@ contexts:
     - match: '(?i)\b(push|pop)\b'
       scope: keyword.control.asm
 
+    - match: '(?i)\b(out|in)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(exx?)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b([de]i)\b'
+      scope: keyword.control.asm
+
     - match: '(?i)\b(LD(D|I|DR|IR)?)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(neg|not|and|tst(io)?|x?or|sh(l|r))\b'
+    - match: '(?i)\b(neg|not|and|x?or|sh(l|r))\b'
       scope: keyword.control.asm
 
     - match: '(?i)\b(cp(i|d|l|ir|dr)?)\b'
@@ -215,12 +221,6 @@ contexts:
       scope: keyword.control.asm
 
     - match: '(?i)\b(s[rl][al]?)\b'
-      scope: keyword.control.asm
-
-    - match: '(?i)\b(out|in)(0)?\b'
-      scope: keyword.control.asm
-
-    - match: '(?i)\b(ot[id](m|mr))\b'
       scope: keyword.control.asm
 
     - match: '(?i)\b(j[rp])\s*({{flags}})?\b'

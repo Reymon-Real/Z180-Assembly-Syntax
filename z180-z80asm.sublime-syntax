@@ -1,0 +1,236 @@
+%YAML 1.2
+
+---
+name: Z180 Assembly
+file_extensions: [asm, inc]
+scope: source.asm
+
+# *****************
+# *** Variables ***
+# *****************
+
+variables:
+
+  reg8: '[A|F|B|C|D|E|H|L|I|R]'
+  reg16: '(AF|BC|DE|HL|IX|IY|SP)'
+#  rptr: '\((HL|IX|IY)\)'
+
+  dec: '([0-9]+[Dd]?)'
+  bin: '((%[01]+)|([01]+[Bb]))'
+  hex: '((0x|#|&|\$)[0-9A-Fa-f]+|[0-9A-Fa-f]+[Hh])'
+  num: '({{dec}}|{{bin}}|{{hex}})\b'
+
+#  operlog: '(==|!=|<=|>=|&&|\!|\|\|)'
+#  operbit: '(<<|>>|&|\~|\^|\|)'
+#  operari: '(\+|\-|\*|/|%|\*\*)'
+#  operato: '({{operlog}}|{{operbit}}|{{operari}}|[<>])'
+
+  label:  '[a-zA-Z_][a-zA-Z0-9_]*'
+#  multi_label: '({{label}}(\s*{{operari}}\s*{{label}})*)'
+
+  flags: '(?i)\b(Z|P|M|C|NZ|NC|PE|PO)\b'
+
+#  comma: '\s*,\s*'
+
+# *******************
+# *** Load sintax ***
+# *******************
+
+contexts:
+
+  prototype:
+    - include: comments
+
+  main:
+    - include: strings
+    - include: directives
+    - include: opcodes
+    - include: registers
+    - include: labels
+    - include: numbers
+    - include: others
+
+# ****************
+# *** Comments ***
+# ****************
+
+  comments:
+    - match: ';'
+      scope: punctuation.definition.comment.asm
+      push:
+        - meta_scope: comment.line.asm
+        - match: $\n?
+          pop: true    
+  
+    - match: '//'
+      scope: punctuation.definition.comment.asm
+      push:
+        - meta_scope: comment.line.asm
+        - match: $\n?
+          pop: true
+
+# *****************
+# *** Registers ***
+# *****************
+
+  registers:
+
+    - match: '(?i)\b({{reg8}}|{{reg16}})\b'
+      scope: variable.function.asm
+
+# ***************
+# *** Strings ***
+# ***************
+
+  strings:
+
+    - match: '"'
+      scope: punctuation.definition.string.begin.asm
+      push: inside_string
+
+  inside_string:
+    - meta_include_prototype: false   
+  
+    - meta_scope: string.quoted.double.asm
+  
+    - match: '\\.'
+      scope: constant.character.escape.asm
+  
+    - match: '"'
+      scope: punctuation.definition.string.end.asm
+      pop: true
+
+# ***************
+# *** Numbers ***
+# ***************
+
+  numbers:
+
+    - match: '(?i){{num}}\b'
+      scope: constant.numeric.asm
+
+# **************
+# *** Labels ***
+# **************
+
+  labels:
+    
+    - match: '^\s*(?i)({{label}}):'
+      captures:
+        1: entity.name.function.asm
+
+    - match: '(?i)({{label}})'
+      scope: variable.parameter.asm
+
+# ******************
+# *** Directives ***
+# ******************
+
+  directives:
+
+    - match: '(?i)\b(global|public|xdef|xlib)\b'
+      scope: keyword.control.asm
+
+    - match: (?i)\b(extern|xref|lib)\b
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(local|section)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(macro|equ|rept[ci]?)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)(align|assert|.assume)'
+
+    - match: '(?i)\b(define|undef|undefine)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(if(n?def)?|el(se|if))\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(end(m|r|if)|exitm)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(include|incbin|binary)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(def[bwpsq])\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(d[bwpsq])\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(ds\.[bwpq])\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(byte|d?word|ptr|float)\b'
+      scope: keyword.control.asm
+
+# **************
+# *** Others ***
+# **************
+
+  others:
+
+    - match: '.'
+      scope: variable.other.asm
+
+# ********************
+# *** Instructions ***
+# ********************
+
+  opcodes:
+
+    - match: '(?i)\b(nop|rst|mlt|im|ccf|djnz|halt|slp)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(bit|set|res)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(inc|dec)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(add|sub)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(adc|sbc)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(push|pop)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(out|in)(0)?\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(exx?)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b([de]i)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(ot[id](m|mr))\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(LD(D|I|DR|IR)?)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(neg|not|and|tst(io)?|x?or|sh(l|r))\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(cp(i|d|l|ir|dr)?)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(r[rl](a|c|d|ca)?)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(s[rl][al]?)\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(j[rp])\s*({{flags}})?\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(call)\s*({{flags}})?\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(ret[ni]?)\s?({{flags}})?\b'
+      scope: keyword.control.asm
