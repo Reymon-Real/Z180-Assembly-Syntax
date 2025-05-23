@@ -1,6 +1,6 @@
 # SPDX-License: GPL-2
 
-VERSION := 1.1.3
+VERSION := 1.2.0
 PACKAGE := Z180-Assembly-Syntax-$(VERSION).sublime-package
 FOLDER  := Z180-Assembly-Syntax-$(VERSION)
 

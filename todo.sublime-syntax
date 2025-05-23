@@ -1,0 +1,74 @@
+%YAML 1.2
+
+---
+name: TODO file
+file_extensions: [td]
+scope: source.td
+
+# *****************
+# *** Variables ***
+# *****************
+
+variables:
+
+  task: '[a-z0-9]'
+
+contexts:
+
+  prototype:
+    - include: comments
+
+  main:
+    - include: strings
+    - include: task_syntax
+
+# ***************
+# *** Strings ***
+# ***************
+
+  strings:
+
+    - match: ''
+      scope: punctuation.definition.string.begin.asm
+      push: inside_string
+
+  inside_string:
+    - meta_include_prototype: false   
+  
+    - meta_scope: string.quoted.double.asm
+  
+    - match: '\\.'
+      scope: constant.character.escape.asm
+  
+    - match: ''
+      scope: punctuation.definition.string.end.asm
+      pop: true
+
+# ****************
+# *** Comments ***
+# ****************
+
+  comments:
+    - match: '#'
+      scope: punctuation.definition.comment.asm
+      push:
+        - meta_scope: comment.line.asm
+        - match: $\n?
+          pop: true    
+  
+    - match: '//'
+      scope: punctuation.definition.comment.asm
+      push:
+        - meta_scope: comment.line.asm
+        - match: $\n?
+          pop: true
+
+# *******************
+# *** Task syntax ***
+# ******************
+
+  task_syntax:
+
+      - match: '(?i)\b({{task}}):\b'
+        captures:
+          1: entity.name.function.asm

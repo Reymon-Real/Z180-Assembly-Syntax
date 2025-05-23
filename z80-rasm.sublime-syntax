@@ -1,7 +1,7 @@
 %YAML 1.2
 
 ---
-name: Z80 Assembly (z80asm)
+name: Z80 Assembly (rasm)
 file_extensions: [asm, inc]
 scope: source.asm
 
@@ -25,12 +25,12 @@ variables:
 #  operari: '(\+|\-|\*|/|%|\*\*)'
 #  operato: '({{operlog}}|{{operbit}}|{{operari}}|[<>])'
 
-  label:  '[a-zA-Z_][a-zA-Z0-9_]*'
+  label:  '[a-zA-Z_][a-zA-Z0-9_]*(\.?[a-zA-Z0-9_]*)*'
 #  multi_label: '({{label}}(\s*{{operari}}\s*{{label}})*)'
 
   flags: '(?i)\b(Z|P|M|C|NZ|NC|PE|PO)\b'
 
-#  comma: '\s*,\s*'
+  comma: '\s*,\s*'
 
 # *******************
 # *** Load sintax ***
@@ -131,43 +131,54 @@ contexts:
     - match: '(?i)\b(org|run)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(global|public|xdef|xlib)\b'
+    - match: '(?i)\b(global|local)\b'
       scope: keyword.control.asm
 
-    - match: (?i)\b(extern|xref|lib)\b
+    - match: '(?i)(align|limit|confine|protect|summem|xormen|ciphermen|assert|default|module)'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(local|section)\b'
+    - match: '(?i)\b(macro|equ|relocation)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(macro|equ|rept[ci]?)\b'
+    - match: '(?i)\b(startingindex|repeat|while)\b'
+
+    - match: '(?i)\b((re)?bank(set|rom|sna)?)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)(align|assert|.assume)'
+    - match: '(?i)\b\(rombank|snaset)b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(define|undef|undefine)\b'
+    - match: '(?i)\b(set(cpc|crtc)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(if(n?def)?|el(se|if))\b'
+    - match: '(?i)\b(build(cpr|zx|tape|rom|obj|sna(v2)?))\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(end(m|r|if)|exitm)\b'
+    - match: '(?i)\b(ram|rom)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(include|incbin|binary)\b'
+    - match: '(?i)\b(define|undef)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(def[bwpsq])\b'
+    - match: '(?i)\b(struct|switch|case|break)\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(d[bwpsq])\b'
+    - match: '(?i)\b(include|incbin|snapinit|cprinit|inc[lzea](48|49|z4|zsa[12]|pu|x[o07]b?))\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(ds\.[bwpq])\b'
+    - match: '(?i)\b(if(n?def|not)?|el(se|if(not)?))\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(byte|d?word|ptr|float)\b'
+    - match: '(?i)\b([rmw]?end(if|struct|switch|relocation))\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(def[bwirf])\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(d[bwirf])\b'
+      scope: keyword.control.asm
+
+    - match: '(?i)\b(str)\b'
       scope: keyword.control.asm
 
 # **************
@@ -234,4 +245,4 @@ contexts:
       scope: keyword.control.asm
 
     - match: '(?i)\b(ret[ni]?)\s*({{flags}})?\b'
-      scope: keyword.control.asm
+      scope: keyword.control.asms

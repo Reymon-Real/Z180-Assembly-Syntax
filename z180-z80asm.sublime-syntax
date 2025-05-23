@@ -1,7 +1,7 @@
 %YAML 1.2
 
 ---
-name: Z180 Assembly
+name: Z180 Assembly (z80asm)
 file_extensions: [asm, inc]
 scope: source.asm
 
@@ -11,8 +11,8 @@ scope: source.asm
 
 variables:
 
-  reg8: '[A|F|B|C|D|E|H|L|I|R]'
-  reg16: '(AF|BC|DE|HL|IX|IY|SP)'
+  reg8: '[a|b|c|d|e|h|l|i|r]'
+  reg16: '(af|bc|de|hl|ix|iy|sp)'
 #  rptr: '\((HL|IX|IY)\)'
 
   dec: '([0-9]+[Dd]?)'
@@ -128,6 +128,9 @@ contexts:
 
   directives:
 
+    - match: '(?i)\b(org|run)\b'
+      scope: keyword.control.asm
+
     - match: '(?i)\b(global|public|xdef|xlib)\b'
       scope: keyword.control.asm
 
@@ -141,6 +144,7 @@ contexts:
       scope: keyword.control.asm
 
     - match: '(?i)(align|assert|.assume)'
+      scope: keyword.control.asm
 
     - match: '(?i)\b(define|undef|undefine)\b'
       scope: keyword.control.asm
@@ -232,5 +236,5 @@ contexts:
     - match: '(?i)\b(call)\s*({{flags}})?\b'
       scope: keyword.control.asm
 
-    - match: '(?i)\b(ret[ni]?)\s?({{flags}})?\b'
+    - match: '(?i)\b(ret[ni]?)\s*({{flags}})?\b'
       scope: keyword.control.asm
